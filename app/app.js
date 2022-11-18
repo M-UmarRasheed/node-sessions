@@ -55,6 +55,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
   app.use('/api', require('../app/db/db').router)
 
   app.listen(
-    4000,
-    console.log('Server is listening on port 4000')
+    config.PORT,
+    console.log('Server is listening on port 4002')
   )
