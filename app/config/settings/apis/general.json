@@ -1,0 +1,34 @@
+{
+  "user": {
+    "post": [
+      "changePassword",
+      "resetPassword",
+      "forgetPassword",
+      "getAllSessions",
+      "login"
+    ],
+    "get": [],
+    "put": [],
+    "delete": []
+  },
+  "admin": {
+    "post": [
+      "forgetPassword",
+      "addUser",
+      "suspendSession", 
+      "twoFactorAuthentication",
+      "getUser",
+      "deleteUser",
+      "updateUser",
+      "assignAccessRightsToSubAdmin",
+      "registerSubAdmin",
+      "getAccessRights",
+      "getAllSubAdmin",
+      "changePassword",
+      "getAllSuspendedSessions"
+    ],
+    "get": [],
+    "put": [],
+    "delete": []
+  }
+}

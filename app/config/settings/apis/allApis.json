@@ -1,0 +1,23 @@
+[
+    "twoFactorAuthentication",
+    "registerPhoneUser",
+    "createSession",
+    "checkMobileLogin",
+    "registerMobile",
+    "getAllSessions",
+    "updateSession",
+    "suspendSession",
+    "unSuspendSession",
+    "getAllSuspendedSessions",
+    "addUser",
+    "deleteUser",
+    "deleteAllUser",
+    "deleteSession",
+    "getUser",
+    "login",
+    "facebookLogin",
+    "forgetPassword",
+    "register",
+    "registerAdmin",
+    "deleteAllUser"
+]

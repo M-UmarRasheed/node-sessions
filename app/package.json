@@ -1,0 +1,37 @@
+{
+  "name": "sessions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "authy": "^1.4.0",
+    "basic-auth": "^2.0.1",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.2",
+    "config": "^3.3.7",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "express-handlebars": "^6.0.2",
+    "express-session": "^1.17.2",
+    "express-useragent": "^1.0.15",
+    "express-validator": "^6.14.0",
+    "ipware": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.1",
+    "ngeohash": "^0.6.3",
+    "nodemailer": "^6.7.2",
+    "nodemailer-handlebars": "^1.0.1",
+    "otplib": "^12.0.1",
+    "passport": "^0.5.2",
+    "passport-facebook": "^3.0.0",
+    "passport-facebook-token": "^4.0.0",
+    "passport-token-google2": "^0.1.4",
+    "path": "^0.12.7",
+    "xid-js": "^1.0.1"
+  }
+}
