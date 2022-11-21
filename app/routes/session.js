@@ -32,6 +32,7 @@ console.log("obj",obj)
   })
 }
 
+
 function suspendSession (req, res) {
   const errors = validationResult(req)
   if (errors.errors.length !== 0) { return res.send({message: 5001, errors: errors.errors}) }
