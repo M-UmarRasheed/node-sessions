@@ -1,6 +1,6 @@
 {
   "PORT": 4002,
-  "DBHost": "mongodb://localhost/session-crud",
+  "DBHost": "mongodb+srv://umar:umar123@cluster0.vaxmx8u.mongodb.net/?retryWrites=true&w=majority",
   "EMAIL": "mumarrasheed69@gmail.com",
   "PASSWORD": "123x456y789z",
   "secret": "umarIsLove",
