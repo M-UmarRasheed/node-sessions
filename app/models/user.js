@@ -61,5 +61,6 @@ bcrypt.hash(this.password, config.saltRounds, function (err, hash) {
 
 userSchema.index({ email: 1, suspended: 1 })
 var User = mongoose.model('user', userSchema)
+
 User.createIndexes()
 module.exports = User
