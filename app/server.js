@@ -3,7 +3,7 @@ let express = require('express')
 let fs = require('fs')
 const loginMiddleWare = require('./middleware/loginMiddleware')
 const accessMiddleware = require('./middleware/accessMiddleware')
-const sessionMiddleware = require('../app/middleware/sessionMiddleware')
+const sessionMiddleware = require('./middleware/sessionMiddleware')
 const apisMiddleware = require('./middleware/apisMiddleware')
 const aclMiddleware = require('./middleware/aclMiddleware')
 const bodyParser = require('body-parser')
@@ -13,7 +13,7 @@ let mongoose = require('mongoose')
 let app = express()
 app.use(bodyParser.json({ strict: false }))
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-app.get('/', (req, res) => res.json({ message: 'Welcome to our SSO Api !' }))
+app.get('/', (req, res) => res.json({ message: 'Welcome to first App deployed on AWS EC2 by Umar !' }))
 
 let options = {
 	useNewUrlParser: true,
@@ -62,8 +62,8 @@ db.on('error', console.error.bind(console, 'connection error:'))
   //   sessionMiddleware(req, res, next)
   // })
 
-  app.use('/api', require('../app/routes/user.js').router)
-  app.use('/api', require('../app/routes/socialLogin.js').router)
+  app.use('/api', require('./routes/user.js').router)
+  app.use('/api', require('./routes/socialLogin.js').router)
 
 
   // Login middleware
