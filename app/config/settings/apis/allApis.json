@@ -20,5 +20,6 @@
     "register",
     "registerAdmin",
     "deleteAllUser",
-    "registerUser"
+    "registerUser",
+    "registerData"
 ]

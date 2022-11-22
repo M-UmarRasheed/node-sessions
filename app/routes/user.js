@@ -39,20 +39,20 @@ const emailOptions = {
 }
 mailTransporter.use('compile', hbs(emailOptions))
 
-function mailSend(name, lastName, from, subject, message, type) {
+function mailSend(name, lastName,to, subject, message, type) {
   const emailOption = {
-    from: from, // sender address
-    to: 'Node Alert' + '<' + config.EMAIL + '>', // list of receivers
+    from: 'Node Alert' + '<' + config.EMAIL + '>', // sender address
     subject: 'Node Alert', // Subject line
     template: type,
     context: {
       firstName: name,
       lastName: lastName,
-      email: from,
+      email: to,
       subject,
       message,
     },
   }
+  console.log('mailoptions',emailOption)
   mailTransporter.sendMail(emailOption, function (err, info) {
     if (err) console.log('THIS IS ERR', err)
     else console.log('info is', info)
@@ -318,9 +318,12 @@ function sendToken (buyer, res) {
 }
 function registerData(req,res) {
   let user = new User(req.body)
+  user.email = req.body.email
+  user.firstName = req. body.firstName
+  user.password = req.body.password
   user.save((err, user) => {
-    if(err) return res.send({message:'user not saved'})
-    return res.send('User Registered',user)
+    if(err) return res.send({message:'user not saved',err})
+    return res.send({message:'User Registered', user})
   })
 }
 
