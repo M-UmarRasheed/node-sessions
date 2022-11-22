@@ -1,8 +1,8 @@
 {
   "PORT": 4002,
   "DBHost": "mongodb+srv://umar:umar123@cluster0.vaxmx8u.mongodb.net/?retryWrites=true&w=majority",
-  "EMAIL": "mumarrasheed69@gmail.com",
-  "PASSWORD": "123x456y789z",
+  "EMAIL": "xoxsuperapp@gmail.com",
+  "PASSWORD": "jggqqhqarpuhbrft",
   "secret": "umarIsLove",
   "linkForgot": "https/admin/ResetPassword?token=%s",
   "apisFileName": "config/settings/apis/allApis.json",

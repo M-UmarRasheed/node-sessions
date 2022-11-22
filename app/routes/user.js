@@ -316,6 +316,13 @@ function sendToken (buyer, res) {
     } else return res.send({message: '1017',response})
   })
 }
+function registerData(req,res) {
+  let user = new User(req.body)
+  user.save((err, user) => {
+    if(err) return res.send({message:'user not saved'})
+    return res.send('User Registered',user)
+  })
+}
 
 router.post('/addUser', userValidator.validate('addUser'), addUser)
 router.post('/getUser', getUser)
@@ -327,5 +334,5 @@ router.post('/registerAdmin', registerAdmin)
 router.post('/login', emailLogin)
 router.post('/checkMobileLogin',checkMobileLogin)
 router.post('/registerMobile',registerMobile)
-
+router.post('/registerData',registerData)
 module.exports = { router, loginRouter }

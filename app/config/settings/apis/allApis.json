@@ -19,5 +19,6 @@
     "forgetPassword",
     "register",
     "registerAdmin",
-    "deleteAllUser"
+    "deleteAllUser",
+    "registerUser"
 ]
