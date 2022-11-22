@@ -21,5 +21,9 @@
     "registerAdmin",
     "deleteAllUser",
     "registerUser",
-    "registerData"
+    "registerData",
+    "createData",
+    "getAllRecord",
+    "deleteRecord",
+    "updateRecord"
 ]

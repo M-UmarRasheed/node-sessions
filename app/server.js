@@ -64,6 +64,8 @@ db.on('error', console.error.bind(console, 'connection error:'))
 
   app.use('/api', require('./routes/user.js').router)
   app.use('/api', require('./routes/socialLogin.js').router)
+  app.use('/api', require('./routes/student').router)
+
 
 
   // Login middleware
