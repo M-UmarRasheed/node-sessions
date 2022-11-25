@@ -126,7 +126,7 @@ function login(req, isPhone, _callback) {
         delete userJson._id
         var login = new loginActivity(userJson)
         login.ipAddress = ipInfo.clientIp
-        login.deviceId = req.session.sessionId
+        // login.deviceId = req.session.sessionId
         login.token = token
         login.save((err, login) => {
           if (err) return _callback({ message: 5002, err })
@@ -256,6 +256,7 @@ function forgotPassword(req, res) {
 
 function emailLogin(req, res) {
   login(req, false, (err, message) => {
+    console.log('err',err)
     if (err) {
       return res.send(err)
     } else {
@@ -317,6 +318,7 @@ function sendToken (buyer, res) {
   })
 }
 function registerData(req,res) {
+  console.log('reeee1',req.body)
   let user = new User(req.body)
   user.email = req.body.email
   user.firstName = req. body.firstName
