@@ -25,7 +25,8 @@
       "getAccessRights",
       "getAllSubAdmin",
       "changePassword",
-      "getAllSuspendedSessions"
+      "getAllSuspendedSessions",
+      "register"
     ],
     "get": [],
     "put": [],

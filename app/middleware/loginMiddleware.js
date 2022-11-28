@@ -2,8 +2,18 @@ const LoginActivity = require('../models/loginActivity')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const geoHash = require('ngeohash')
+const auth = require('basic-auth')
+
 
 function verifySecureLogin(req, res, next) {
+  var user = auth(req)
+	var setCommand = {}
+	if (user) {
+		req.basicAuth = {}
+		req.basicAuth.user = user.name
+		req.basicAuth.pass = user.pass
+	}
+
   if (req.basicAuth) {
     check(req, res, next, req.basicAuth.pass, req.basicAuth.user)
   } else {
@@ -12,7 +22,8 @@ function verifySecureLogin(req, res, next) {
 }
 
 function check(req, res, next, token, user) {
- 
+ console.log('token',token)
+ console.log('user',user)
 
   let location = {}
   let region = req.region ? req.region : null
@@ -25,7 +36,7 @@ function check(req, res, next, token, user) {
   }
   LoginActivity.findOneAndUpdate(
     {
-      deviceId: req.session.sessionId,
+      // deviceId: req.session.sessionId,
       email: user,
       token: token,
       suspended: false,
