@@ -341,7 +341,7 @@ function getNonExpiringToken(email, isSuspended) {
 		user: email,
 		suspended: isSuspended,
 	}
-	var token = jwt.sign(payload, app.get('secret'), {})
+	var token = jwt.sign(payload, config.secret, {})
 	return token
 }
 
