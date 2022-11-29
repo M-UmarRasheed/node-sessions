@@ -16,6 +16,7 @@
     "getUser",
     "login",
     "facebookLogin",
+    "googleLogin",
     "forgetPassword",
     "register",
     "registerAdmin",
