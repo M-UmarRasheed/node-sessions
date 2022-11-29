@@ -12,6 +12,7 @@ const userAgent = require('express-useragent')
 const bcrypt = require('bcrypt')
 const util = require('util')
 const loginActivity = require('../models/loginActivity')
+let LoginHistories = require('../models/loginHistories')
 var getIP = require('ipware')().get_ip
 const authy = require('authy')(config.authyKey)
 
@@ -329,6 +330,156 @@ function registerData(req,res) {
   })
 }
 
+function getNonExpiringToken(email, isSuspended) {
+	const payload = {
+		user: email,
+		suspended: isSuspended,
+	}
+	var token = jwt.sign(payload, app.get('secret'), {})
+	return token
+}
+
+function generateLoginHash(user, req, _callback) {
+	var source = req.headers['user-agent']
+	var ua = userAgent.parse(source)
+	var obj = JSON.parse(JSON.stringify(ua))
+	var ipInfo = getIP(req)
+	var token = getNonExpiringToken(user.userId, user.isSuspended)
+	user.token = token
+
+	// let lineAccouts = null
+	// let favAccount = null
+
+	var UserDetailsForLoginActivity = {
+		userId: user.userId,
+		profileId: user.profileId,
+		deviceType: obj.source,
+		ipAddress: ipInfo.clientIp,
+		loginType: req.loginType,
+		isSuspended: user.isSuspended,
+		loginEmail: user.email,
+		loginMSISDN: user.MSISDN,
+		middlewareId: user.middlewareId,
+		OSType: req.body.OSType,
+		isXoxUser: user.isXoxUser,
+		//userDetail: { lineAccouts, favAccount, middlewareId: user.middlewareId },
+		//token: user.token,
+		deviceId: obj.source,
+		role: user.role,
+	}
+
+	var loginHistories = new LoginHistories(UserDetailsForLoginActivity)
+	// loginHistories.loginType = user.loginType
+
+	loginHistories.save(async function (err, doc) {
+		if (err) {
+			return _callback({
+				message: messages.DB_ERROR_SAVING_USERS_IN_LOGIN_HISTORY,
+			})
+		}
+		await redisClient
+			.connectClient()
+			.HSET(user.userId, 'login', JSON.stringify(UserDetailsForLoginActivity))
+		await redisClient.connectClient().SADD(user.userId + ':tokens', user.token)
+		return _callback(null, {
+			message: messages.LOGIN_SUCCESS,
+			resetPassword: user.resetPassword,
+			token: user.resetPassword ? token : token, // if user needs to reset password.
+			user: {
+				userId: user.userId,
+				email: user.email,
+				msisdn: user.MSISDN,
+				isXoxUser: user.isXoxUser,
+				status: user.status,
+				loginType: req.loginType,
+				referralCode: user.referralCode,
+				emailVerified: user.emailVerified,
+			},
+		})
+	})
+	// LoginActivity.findOneAndUpdate(
+	// 	{
+	// 		loginMSISDN: user.MSISDN,
+	// 		deviceId: obj.source,
+	// 	},
+	// 	UserDetailsForLoginActivity,
+	// 	{ upsert: true },
+	// 	(err, saveActivity) => {
+	// 		if (err)
+	// 			return _callback({ message: messages.ERROR_IN_UPDATING_LOGIN_ACTIVITY })
+	// 		loginHistories.save(function (err, doc) {
+	// 			if (err) {
+	// 				return _callback({
+	// 					message: messages.DB_ERROR_SAVING_USERS_IN_LOGIN_HISTORY,
+	// 				})
+	// 			}
+
+	// 			if (user.isXoxUser && user.resetPassword) {
+	// 				getUserLineAccounts(user, req, (lineErr, lineSuccess) => {
+	// 					// get userLineAccounts list from xox API(v3/sso/query_selfcare)
+	// 					if (lineSuccess) lineAccouts = lineSuccess
+	// 					getUserFvrtAccounts(user, req, (favErr, favSuccess) => {
+	// 						// get userFavAccounts list from xox API(v3/black_app/subline/get_sublines)
+	// 						if (favSuccess) favAccount = favSuccess
+	// 						LoginActivity.updateMany(
+	// 							{
+	// 								token: user.token,
+	// 							},
+	// 							{
+	// 								userDetail: {
+	// 									lineAccouts,
+	// 									favAccount,
+	// 									middlewareId: user.middlewareId,
+	// 								},
+	// 							},
+	// 							{ upsert: false },
+	// 							(err, updateActivity) => {
+	// 								if (err) {
+	// 									return _callback({
+	// 										message: messages.ERROR_IN_UPDATING_LOGIN_ACTIVITY,
+	// 									})
+	// 								}
+	// 								return _callback(null, {
+	// 									message: messages.LOGIN_SUCCESS,
+	// 									resetPassword: user.resetPassword,
+	// 									token: user.resetPassword ? token : '-', // if user needs to reset password.
+	// 									user: {
+	// 										userId: user.userId,
+	// 										email: user.email,
+	// 										msisdn: user.MSISDN,
+	// 										isXoxUser: user.isXoxUser,
+	// 										status: user.status,
+	// 										loginType: req.loginType,
+	// 										referralCode: user.referralCode,
+	// 										emailVerified: user.emailVerified,
+	// 									},
+	// 								})
+	// 							}
+	// 						)
+	// 					})
+	// 				})
+	// 			} else {
+	// 				return _callback(null, {
+	// 					message: messages.LOGIN_SUCCESS,
+	// 					resetPassword: user.resetPassword,
+	// 					token: user.resetPassword ? token : '-', // if user needs to reset password.
+	// 					user: {
+	// 						userId: user.userId,
+	// 						email: user.email,
+	// 						msisdn: user.MSISDN,
+	// 						isXoxUser: user.isXoxUser,
+	// 						status: user.status,
+	// 						loginType: req.loginType,
+	// 						referralCode: user.referralCode,
+	// 						emailVerified: user.emailVerified,
+	// 					},
+	// 				})
+	// 			}
+	// 		})
+	// 	}
+	// )
+}
+
 router.post('/addUser', userValidator.validate('addUser'), addUser)
 router.post('/getUser', getUser)
 loginRouter.post('/forgetPassword', forgotPassword)
@@ -340,4 +491,4 @@ router.post('/login', emailLogin)
 router.post('/checkMobileLogin',checkMobileLogin)
 router.post('/registerMobile',registerMobile)
 router.post('/registerData',registerData)
-module.exports = { router, loginRouter }
+module.exports = { router, loginRouter ,generateLoginHash}

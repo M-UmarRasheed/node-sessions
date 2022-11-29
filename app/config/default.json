@@ -16,5 +16,12 @@
   "minOtp": 100000,
   "maxOtp": 999999,
   "maxOtps": 10,
-  "otpsTimeSpan": 86400000
+  "otpsTimeSpan": 86400000,
+  "clientIDFacebook": 1319204595563172,
+  "clientSecretFacebook": "1f2028e1a7b59e0f630d301afe8478ce",
+  "clientSecretGoogle":"cffaLK6QBLJsVm8pfORbWQzP",
+  "appleClientId": "org.reactjs.native.azure.XOXBlackApp",
+  "appleTeamID": "JFFSSQDARC",
+  "appleKeyID": "7RF9Q3278M",
+  "ssoBaseUrl" : "http://18.136.106.202/api/"
 }
