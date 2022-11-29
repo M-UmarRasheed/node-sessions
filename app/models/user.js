@@ -6,9 +6,9 @@ let Schema = mongoose.Schema
 let userSchema = new Schema({
   username:{ type: String, required: false },
   name: { type: String,required: false },
-  email: { type: String },
+  email: { type: String, index: true, unique: true },
   password:{ type:String },
-  phone:{ type:Number },
+  phone:{ type:Number, index: true },
   countryCode: { type: Number, required: false },
   role:{type:Number, default: 1 },
   active:{type:Boolean,default: true},

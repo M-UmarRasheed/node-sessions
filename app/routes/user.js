@@ -319,7 +319,9 @@ function sendToken (buyer, res) {
   })
 }
 function registerData(req,res) {
-  console.log('reeee1',req.body)
+  User.findOne({ email: req.body.email },(err,user) => {
+    if(err|| user) return res.send({messages:message.USER_ALREADY_REGISTERED})
+  else {
   let user = new User(req.body)
   user.email = req.body.email
   user.firstName = req. body.firstName
@@ -327,7 +329,9 @@ function registerData(req,res) {
   user.save((err, user) => {
     if(err) return res.send({message:'user not saved',err})
     return res.send({message:'User Registered', user})
-  })
+    })
+   }
+ })
 }
 
 function getNonExpiringToken(email, isSuspended) {
