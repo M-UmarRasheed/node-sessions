@@ -371,48 +371,48 @@ function generateLoginHash(user, req, _callback) {
 	var loginHistories = new LoginHistories(UserDetailsForLoginActivity)
 	// loginHistories.loginType = user.loginType
 
-	loginHistories.save(async function (err, doc) {
-		if (err) {
-			return _callback({
-				message: messages.DB_ERROR_SAVING_USERS_IN_LOGIN_HISTORY,
-			})
-		}
-		await redisClient
-			.connectClient()
-			.HSET(user.userId, 'login', JSON.stringify(UserDetailsForLoginActivity))
-		await redisClient.connectClient().SADD(user.userId + ':tokens', user.token)
-		return _callback(null, {
-			message: messages.LOGIN_SUCCESS,
-			resetPassword: user.resetPassword,
-			token: user.resetPassword ? token : token, // if user needs to reset password.
-			user: {
-				userId: user.userId,
-				email: user.email,
-				msisdn: user.MSISDN,
-				isXoxUser: user.isXoxUser,
-				status: user.status,
-				loginType: req.loginType,
-				referralCode: user.referralCode,
-				emailVerified: user.emailVerified,
-			},
-		})
-	})
-	// LoginActivity.findOneAndUpdate(
-	// 	{
-	// 		loginMSISDN: user.MSISDN,
-	// 		deviceId: obj.source,
-	// 	},
-	// 	UserDetailsForLoginActivity,
-	// 	{ upsert: true },
-	// 	(err, saveActivity) => {
-	// 		if (err)
-	// 			return _callback({ message: messages.ERROR_IN_UPDATING_LOGIN_ACTIVITY })
-	// 		loginHistories.save(function (err, doc) {
-	// 			if (err) {
-	// 				return _callback({
-	// 					message: messages.DB_ERROR_SAVING_USERS_IN_LOGIN_HISTORY,
-	// 				})
-	// 			}
+	// loginHistories.save(async function (err, doc) {
+	// 	if (err) {
+	// 		return _callback({
+	// 			message: messages.DB_ERROR_SAVING_USERS_IN_LOGIN_HISTORY,
+	// 		})
+	// 	}
+		// await redisClient
+		// 	.connectClient()
+		// 	.HSET(user.userId, 'login', JSON.stringify(UserDetailsForLoginActivity))
+		// await redisClient.connectClient().SADD(user.userId + ':tokens', user.token)
+		// return _callback(null, {
+		// 	message: messages.LOGIN_SUCCESS,
+		// 	resetPassword: user.resetPassword,
+		// 	token: user.resetPassword ? token : token, // if user needs to reset password.
+		// 	user: {
+		// 		userId: user.userId,
+		// 		email: user.email,
+		// 		msisdn: user.MSISDN,
+		// 		isXoxUser: user.isXoxUser,
+		// 		status: user.status,
+		// 		loginType: req.loginType,
+		// 		referralCode: user.referralCode,
+		// 		emailVerified: user.emailVerified,
+		// 	},
+		// })
+	// })
+	loginActivity.findOneAndUpdate(
+		{
+			loginMSISDN: user.MSISDN,
+			deviceId: obj.source,
+		},
+		UserDetailsForLoginActivity,
+		{ upsert: true },
+		(err, saveActivity) => {
+			if (err)
+				return _callback({ message: messages.ERROR_IN_UPDATING_LOGIN_ACTIVITY })
+			loginHistories.save(function (err, doc) {
+				if (err) {
+					return _callback({
+						message: messages.DB_ERROR_SAVING_USERS_IN_LOGIN_HISTORY,
+					})
+				}
 
 	// 			if (user.isXoxUser && user.resetPassword) {
 	// 				getUserLineAccounts(user, req, (lineErr, lineSuccess) => {
@@ -439,24 +439,24 @@ function generateLoginHash(user, req, _callback) {
 	// 										message: messages.ERROR_IN_UPDATING_LOGIN_ACTIVITY,
 	// 									})
 	// 								}
-	// 								return _callback(null, {
-	// 									message: messages.LOGIN_SUCCESS,
-	// 									resetPassword: user.resetPassword,
-	// 									token: user.resetPassword ? token : '-', // if user needs to reset password.
-	// 									user: {
-	// 										userId: user.userId,
-	// 										email: user.email,
-	// 										msisdn: user.MSISDN,
-	// 										isXoxUser: user.isXoxUser,
-	// 										status: user.status,
-	// 										loginType: req.loginType,
-	// 										referralCode: user.referralCode,
-	// 										emailVerified: user.emailVerified,
-	// 									},
-	// 								})
-	// 							}
-	// 						)
-	// 					})
+									return _callback(null, {
+										message: messages.LOGIN_SUCCESS,
+										resetPassword: user.resetPassword,
+										token: user.resetPassword ? token : '-', // if user needs to reset password.
+										user: {
+											userId: user.userId,
+											email: user.email,
+											msisdn: user.MSISDN,
+											isXoxUser: user.isXoxUser,
+											status: user.status,
+											loginType: req.loginType,
+											referralCode: user.referralCode,
+											emailVerified: user.emailVerified,
+										},
+									})
+								}
+							)
+						})
 	// 				})
 	// 			} else {
 	// 				return _callback(null, {

@@ -23,5 +23,10 @@
   "appleClientId": "org.reactjs.native.azure.XOXBlackApp",
   "appleTeamID": "JFFSSQDARC",
   "appleKeyID": "7RF9Q3278M",
-  "ssoBaseUrl" : "http://18.136.106.202/api/"
+  "ssoBaseUrl" : "http://18.136.106.202/api/",
+  "clientID_1":"478047383983-j9k3ata4qcs107mmvimiejbis610tk4m.apps.googleusercontent.com",
+  "clientID_2":"986312347523-m459f13dmlkgir2f6sfb3dltqnfhn31l.apps.googleusercontent.com",
+  "clientID_3":" 986312347523-7s2hb93ec76k5sgaps0tv95o34h50ht0.apps.googleusercontent.com",
+  "TWITTER_CONSUMER_KEY":"123",
+  "TWITTER_CONSUMER_SECRET":"3322"
 }

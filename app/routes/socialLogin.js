@@ -10,7 +10,7 @@ const { validationResult } = require('express-validator')
 let passport = require('passport')
 let FacebookTokenStrategy = require('passport-facebook-token')
 let Xid = require('xid-js')
-// const TwitterTokenStrategy = require('passport-twitter-token')
+const TwitterTokenStrategy = require('passport-twitter-token')
 // const AppleStrategy = require('passport-apple-token')
 var GoogleTokenStrategy = require('passport-token-google2').Strategy
 let referralCodeGenerator = require('referral-code-generator')
@@ -301,6 +301,72 @@ function appleLogin(req, res, next) {
 
 function appleLoginCallBackUrl (req, res) {
   console.log("Request Details from Apple Login = ", req.body)
+}
+
+passport.use(new TwitterTokenStrategy({
+  consumerKey: config.TWITTER_CONSUMER_KEY,
+  consumerSecret: config.TWITTER_CONSUMER_SECRET
+},
+function(token, tokenSecret, profile, done) {
+    return done(null, profile);
+  }
+))
+
+function twitterLogin(req, res, next) {
+  const errors = validationResult(req)
+  if (errors.errors.length !== 0) {
+    return res.send({ message: 5001, errors: errors.errors })
+  }
+
+  passport.authenticate('twitter-token', function (err, profile, info) {
+    console.log('twitterErr = ', err)
+    console.log('twitter Profile = > ', profile)
+    if (err || !profile) return res.send({ message: messages.ACCESS_TOKEN_EXPIRED })
+    if (profile.email === '') return res.send({ message: messages.EMAIL_NEEDED_FOR_FB_GOOGLE })
+    Users.findOne({ email: profile.email }, (err, user) => {
+      if (err) return res.send({ message: messages.ERROR_USERS_DB })
+      if (!user) {
+        var refCode = referralCodeGenerator.alphaNumeric('lowercase', 2, 2)
+        var userDetails = {
+          email: profile.email,
+          loginType: 'twitter',
+          userId: Xid.next(),
+          MSISDN: '60' + new Date().getTime().toString(),
+          password: 'tempPassword',
+          referralCode: refCode,
+          isXoxUser: false,
+          isSuspended: false,
+          status: 2, // MSISDN Unverified
+          resetPassword: true,
+          profileId: '',
+          appleId: profile.id,
+          twitterId :profile.id,
+          emailVerified: 0,
+          middlewareId: generateRandom(),
+          role: 1,
+          lEmail: profile.email.toLowerCase(),
+          randomMsisdn: true,
+        }
+        saveSocialUser(userDetails, (err, user) => {
+          console.log('userErr', err)
+          if (err) return res.send(err)
+          req.loginType = 'apple'
+          generateLoginHash(user, req, (err, loginSuccess) => {
+            console.log('loginSuccessErr =', err)
+            if (err) return res.send(err)
+            return res.send(loginSuccess)
+          })
+        })
+      } else {
+        req.loginType = 'twitter'
+        generateLoginHash(user, req, (err, loginSuccess) => {
+          console.log('loginSuccessErr', err)
+          if (err) return res.send(err)
+          return res.send(loginSuccess)
+        })
+      }
+    })
+  })(req, res, next)
 }
 
 router.post(
