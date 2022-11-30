@@ -15,7 +15,6 @@ const loginActivity = require('../models/loginActivity')
 let LoginHistories = require('../models/loginHistories')
 var getIP = require('ipware')().get_ip
 const authy = require('authy')(config.authyKey)
-const messages = require('../messages/messages')
 
 let router = express.Router()
 let loginRouter = express.Router()
@@ -321,8 +320,7 @@ function sendToken (buyer, res) {
 }
 function registerData(req,res) {
   User.findOne({ email: req.body.email },(err,user) => {
-    console.log('err',err)
-    if(err|| user) return res.send({message:messages.USER_ALREADY_REGISTERED})
+    if(err|| user) return res.send({messages:message.USER_ALREADY_REGISTERED})
   else {
   let user = new User(req.body)
   user.email = req.body.email
